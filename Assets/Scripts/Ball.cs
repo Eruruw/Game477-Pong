@@ -25,11 +25,35 @@ public class Ball : MonoBehaviour
     public void Play()
     {
         Game = new GameState();
+        speed = 5;
         transform.position = origPos;
         float result = Random.Range(0f, 1f);
         AudioSource playMusic = Music.GetComponent<AudioSource>();
         playMusic.Play();
         if (result < 0.5)
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector2.left * speed;
+        }
+        else
+        {
+            GetComponent<Rigidbody2D>().velocity = Vector2.right * speed;
+        }
+    }
+
+    void Update()
+    {
+        if (speed < 30)
+        {
+            speed = speed * 1.0002f;
+        }
+    }
+
+    public void Reset(string boundary)
+    {
+        speed = 5;
+        transform.position = origPos;
+        float result = Random.Range(0f, 1f);
+        if (boundary == "left")
         {
             GetComponent<Rigidbody2D>().velocity = Vector2.left * speed;
         }
@@ -79,7 +103,7 @@ public class Ball : MonoBehaviour
             {
                 AudioSource Score = ScoreAudio.GetComponent<AudioSource>();
                 Score.Play();
-                transform.position = origPos;
+                Reset("left");
             }
         }
         if (c.gameObject.name == "RightBounds")
@@ -97,7 +121,7 @@ public class Ball : MonoBehaviour
             {
                 AudioSource Score = ScoreAudio.GetComponent<AudioSource>();
                 Score.Play();
-                transform.position = origPos;
+                Reset("right");
             }
         }
     }
