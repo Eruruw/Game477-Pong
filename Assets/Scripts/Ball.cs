@@ -5,16 +5,20 @@ public class Ball : MonoBehaviour
 {
     public GameObject uiGameOver;
     public GameObject Particles;
+    public GameObject ScoreAudio;
+    public GameObject Music;
     public float speed = 5;
     public Vector2 dir;
     private Vector2 origPos;
     public TextMeshProUGUI Player1;
     public TextMeshProUGUI Player2;
+    private AudioSource myAudio;
 
     public GameState Game;
 
     void Start()
     {
+        myAudio = GetComponent<AudioSource>();
         origPos = transform.position;
     }
 
@@ -23,6 +27,8 @@ public class Ball : MonoBehaviour
         Game = new GameState();
         transform.position = origPos;
         float result = Random.Range(0f, 1f);
+        AudioSource playMusic = Music.GetComponent<AudioSource>();
+        playMusic.Play();
         if (result < 0.5)
         {
             GetComponent<Rigidbody2D>().velocity = Vector2.left * speed;
@@ -47,6 +53,7 @@ public class Ball : MonoBehaviour
             float y = hitDir(transform.position, c.transform.position, c.collider.bounds.size.y);
             Vector2 dir = new Vector2(1, y).normalized;
             GetComponent<Rigidbody2D>().velocity = dir * speed;
+            myAudio.Play();
         }
         if (c.gameObject.name == "GreenPaddle")
         {
@@ -55,18 +62,23 @@ public class Ball : MonoBehaviour
             float y = hitDir(transform.position, c.transform.position, c.collider.bounds.size.y);
             Vector2 dir = new Vector2(-1, y).normalized;
             GetComponent<Rigidbody2D>().velocity = dir * speed;
+            myAudio.Play();
         }
         if (c.gameObject.name == "LeftBounds")
         {
             Game.ScoreRight();
             Player2.text = Game.rightScore.ToString();
-            if (Game.rightScore >= 2)
+            if (Game.rightScore >= 5)
             {
                 GetComponent<Rigidbody2D>().velocity = dir * 0;
                 uiGameOver.SetActive(true);
+                AudioSource UiAudio = uiGameOver.GetComponent<AudioSource>();
+                UiAudio.Play();
             }
             else
             {
+                AudioSource Score = ScoreAudio.GetComponent<AudioSource>();
+                Score.Play();
                 transform.position = origPos;
             }
         }
@@ -74,13 +86,17 @@ public class Ball : MonoBehaviour
         {
             Game.ScoreLeft();
             Player1.text = Game.leftScore.ToString();
-            if (Game.leftScore >= 2)
+            if (Game.leftScore >= 5)
             {
                 GetComponent<Rigidbody2D>().velocity = dir * 0;
                 uiGameOver.SetActive(true);
+                AudioSource UiAudio = uiGameOver.GetComponent<AudioSource>();
+                UiAudio.Play();
             }
             else
             {
+                AudioSource Score = ScoreAudio.GetComponent<AudioSource>();
+                Score.Play();
                 transform.position = origPos;
             }
         }

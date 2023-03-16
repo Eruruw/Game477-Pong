@@ -7,12 +7,15 @@ public class GameState : MonoBehaviour
     public GameObject uiGameOver;
     public TextMeshProUGUI Player1;
     public TextMeshProUGUI Player2;
+    private AudioSource myAudio;
 
     public int leftScore;
     public int rightScore;
 
     private void Awake()
     {
+        myAudio = GetComponent<AudioSource>();
+        myAudio.Play();
         uiStart.SetActive(true);
         uiGameOver.SetActive(false);
     }
